@@ -1,6 +1,10 @@
 # animation-lab
 
-Browser-Demo fuer ein WoW-inspiriertes Codex-Buch (Fraktions-Cover, Oeffnen, Lesezeichen, Blaettern).
+Browser-Demo fuer ein WoW-inspiriertes Codex-Buch:
+- Fraktions-Cover (Allianz/Horde) mit Aufklapp-Animation
+- offenes Lederbuch mit Pergament-Seiten
+- Band-Lesezeichen unten
+- echte 3D-Blaetter-Animation beim Seitenwechsel
 
 ## Wichtig fuer Handy / Online-Preview
 
