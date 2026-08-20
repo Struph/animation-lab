@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codex Book Animation Demo</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", sans-serif;
+      color: #2b2016;
+      background: radial-gradient(circle at center, #5a4230 0%, #24170f 70%);
+    }
+
+    .scene {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      color: #f4dfb0;
+      flex-wrap: wrap;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .hint {
+      margin: 0 0 16px;
+      color: #e8d3a2;
+      opacity: 0.9;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .controls select,
+    .controls button {
+      border-radius: 6px;
+      border: 1px solid #8f7144;
+      background: #2f2117;
+      color: #f4dfb0;
+      padding: 8px 10px;
+    }
+
+    .controls button { cursor: pointer; }
+
+    .book-shell {
+      display: grid;
+      place-items: center;
+    }
+
+    .book {
+      position: relative;
+      width: min(960px, 95vw);
+      height: min(620px, 70vh);
+      perspective: 1200px;
+    }
+
+    .book-cover,
+    .page-spread {
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+    }
+
+    .book-cover {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: #f7f1e8;
+      border: 2px solid rgba(255, 229, 158, 0.35);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+      transform-origin: left center;
+      transition: transform 0.7s ease, opacity 0.35s ease;
+      z-index: 2;
+    }
+
+    .book-cover.alliance {
+      background: linear-gradient(135deg, #1f4f8d 0%, #0f243f 100%);
+    }
+
+    .book-cover.horde {
+      background: linear-gradient(135deg, #8e2a24 0%, #3d1210 100%);
+    }
+
+    .cover-title {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .cover-faction {
+      margin-top: 4px;
+      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+      font-weight: 600;
+    }
+
+    .cover-subtitle {
+      margin-top: 6px;
+      opacity: 0.85;
+    }
+
+    .page-spread {
+      opacity: 0;
+      pointer-events: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      padding: 24px;
+      background: linear-gradient(180deg, #372519 0%, #1f140e 100%);
+      z-index: 1;
+    }
+
+    .page {
+      padding: 24px;
+      border-radius: 8px;
+      background:
+        linear-gradient(175deg, rgba(246, 228, 189, 0.98), rgba(231, 205, 160, 0.92)),
+        repeating-linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.03) 0,
+          rgba(0, 0, 0, 0.03) 1px,
+          transparent 1px,
+          transparent 24px
+        );
+      border: 1px solid rgba(95, 65, 29, 0.38);
+      box-shadow: inset 0 0 18px rgba(112, 71, 29, 0.18);
+      overflow: auto;
+    }
+
+    .page h2 { margin-top: 0; }
+
+    .flip-overlay {
+      position: absolute;
+      top: 24px;
+      bottom: 24px;
+      right: 24px;
+      width: calc(50% - 31px);
+      border-radius: 8px;
+      pointer-events: none;
+      opacity: 0;
+      transform-origin: left center;
+      background: linear-gradient(90deg, rgba(255, 238, 198, 0.92), rgba(190, 152, 102, 0.55));
+    }
+
+    .bookmarks {
+      position: absolute;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      z-index: 3;
+    }
+
+    .bookmark-btn {
+      border: 1px solid #765329;
+      background: linear-gradient(180deg, #a73f36, #702722);
+      color: #fbeec8;
+      padding: 6px 10px;
+      border-radius: 6px 6px 10px 10px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transform: translateY(0);
+      transition: transform 0.16s ease, filter 0.16s ease;
+    }
+
+    .bookmark-btn:hover { transform: translateY(-2px); }
+
+    .bookmark-btn.active {
+      filter: brightness(1.2);
+      box-shadow: 0 0 0 2px rgba(255, 220, 126, 0.5);
+    }
+
+    .book.is-open .book-cover {
+      transform: rotateY(-92deg) scale(0.97);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    .book.is-open .page-spread {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .book.is-open .bookmarks {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .flip-overlay.is-flipping {
+      animation: pageFlip 0.45s ease;
+    }
+
+    @keyframes pageFlip {
+      0% { opacity: 0; transform: rotateY(0deg) scaleX(1); }
+      30% { opacity: 0.92; }
+      100% { opacity: 0; transform: rotateY(-95deg) scaleX(0.9); }
+    }
+  </style>
+</head>
+<body>
+  <main class="scene">
+    <header class="topbar">
+      <h1>Codex of Tales - Demo</h1>
+      <div class="controls">
+        <label for="factionSelect">Fraktion:</label>
+        <select id="factionSelect">
+          <option value="alliance">Allianz</option>
+          <option value="horde">Horde</option>
+        </select>
+        <button id="openBookBtn" type="button">Buch oeffnen</button>
+      </div>
+    </header>
+
+    <p class="hint">1) Fraktion waehlen  2) auf „Buch oeffnen“ klicken  3) unten auf Lesezeichen tippen</p>
+
+    <section class="book-shell">
+      <div id="book" class="book is-closed" aria-live="polite">
+        <div id="bookCover" class="book-cover">
+          <div class="cover-title">Codex</div>
+          <div id="coverFaction" class="cover-faction">Allianz Chronik</div>
+          <div class="cover-subtitle">Chronicle of Azeroth</div>
+        </div>
+
+        <div id="pageSpread" class="page-spread">
+          <article class="page left-page">
+            <h2 id="leftTitle">Kapitel</h2>
+            <p id="leftBody">Platzhalter links.</p>
+          </article>
+
+          <article class="page right-page">
+            <h2 id="rightTitle">Quest</h2>
+            <p id="rightBody">Platzhalter rechts.</p>
+          </article>
+
+          <div id="flipOverlay" class="flip-overlay" aria-hidden="true"></div>
+        </div>
+
+        <nav id="bookmarks" class="bookmarks" aria-label="Lesezeichen"></nav>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const pageData = [
+      {
+        leftTitle: "Kapitel 1",
+        leftBody: "Platzhaltertext links. Hier kann spaeter Lore, Story oder Fraktionshintergrund stehen.",
+        rightTitle: "Questseite 1",
+        rightBody: "Platzhalter rechts. Zum Beispiel Questziel, Fortschritt und Belohnungen.",
+        marker: "Start",
+      },
+      {
+        leftTitle: "Kapitel 2",
+        leftBody: "Platzhalter links fuer den zweiten Abschnitt. Denkbar sind Maps, Notizen oder NPC-Hinweise.",
+        rightTitle: "Questseite 2",
+        rightBody: "Rechts kannst du Checklisten und Fortschritt anzeigen.",
+        marker: "Quests",
+      },
+      {
+        leftTitle: "Kapitel 3",
+        leftBody: "Platzhalter links fuer Bestiarium oder Ruffraktionen.",
+        rightTitle: "Questseite 3",
+        rightBody: "Rechts kannst du Belohnungen und Story-Fortsetzung darstellen.",
+        marker: "Belohnungen",
+      },
+      {
+        leftTitle: "Kapitel 4",
+        leftBody: "Platzhalter links fuer Dungeon-Notizen oder Raidtaktiken.",
+        rightTitle: "Questseite 4",
+        rightBody: "Rechts kannst du Marker fuer wichtige Orte oder Aufgaben setzen.",
+        marker: "Notizen",
+      },
+    ];
+
+    const book = document.getElementById("book");
+    const bookCover = document.getElementById("bookCover");
+    const coverFaction = document.getElementById("coverFaction");
+    const factionSelect = document.getElementById("factionSelect");
+    const openBookBtn = document.getElementById("openBookBtn");
+    const leftTitle = document.getElementById("leftTitle");
+    const leftBody = document.getElementById("leftBody");
+    const rightTitle = document.getElementById("rightTitle");
+    const rightBody = document.getElementById("rightBody");
+    const bookmarks = document.getElementById("bookmarks");
+    const flipOverlay = document.getElementById("flipOverlay");
+
+    let currentPage = 0;
+    let isFlipping = false;
+
+    function setFaction(factionKey) {
+      bookCover.classList.remove("alliance", "horde");
+      if (factionKey === "horde") {
+        bookCover.classList.add("horde");
+        coverFaction.textContent = "Horde Kodex";
+      } else {
+        bookCover.classList.add("alliance");
+        coverFaction.textContent = "Allianz Chronik";
+      }
+    }
+
+    function renderPage(index) {
+      const page = pageData[index];
+      if (!page) return;
+
+      leftTitle.textContent = page.leftTitle;
+      leftBody.textContent = page.leftBody;
+      rightTitle.textContent = page.rightTitle;
+      rightBody.textContent = page.rightBody;
+
+      const buttons = bookmarks.querySelectorAll(".bookmark-btn");
+      buttons.forEach((button, buttonIndex) => {
+        button.classList.toggle("active", buttonIndex === index);
+      });
+    }
+
+    function flipToPage(targetIndex) {
+      if (isFlipping || targetIndex === currentPage || !pageData[targetIndex]) return;
+      isFlipping = true;
+
+      flipOverlay.classList.remove("is-flipping");
+      void flipOverlay.offsetWidth;
+      flipOverlay.classList.add("is-flipping");
+
+      const onFlipDone = () => {
+        currentPage = targetIndex;
+        renderPage(currentPage);
+        isFlipping = false;
+        flipOverlay.removeEventListener("animationend", onFlipDone);
+      };
+
+      flipOverlay.addEventListener("animationend", onFlipDone);
+    }
+
+    function createBookmarks() {
+      pageData.forEach((page, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "bookmark-btn";
+        button.textContent = page.marker;
+        button.addEventListener("click", () => flipToPage(index));
+        bookmarks.appendChild(button);
+      });
+    }
+
+    openBookBtn.addEventListener("click", () => {
+      book.classList.add("is-open");
+    });
+
+    factionSelect.addEventListener("change", (event) => {
+      setFaction(event.target.value);
+    });
+
+    createBookmarks();
+    setFaction("alliance");
+    renderPage(currentPage);
+  </script>
+</body>
+</html>
