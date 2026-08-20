@@ -1,0 +1,8 @@
+## Interface: 110000
+## Title: Codex of Tales (Demo)
+## Author: Cursor Agent
+## Version: 0.1.0
+## Notes: WoW-compatible codex book UI with cover + page-flip pipeline.
+## SavedVariables: CodexOfTalesDB
+
+CodexOfTales.lua
