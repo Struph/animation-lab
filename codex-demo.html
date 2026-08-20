@@ -13,11 +13,11 @@
     body {
       margin: 0;
       min-height: 100vh;
-      color: #2a1c12;
+      color: #f0d9a4;
       font-family: "IM Fell English", Georgia, serif;
       background:
-        radial-gradient(ellipse at 50% 35%, rgba(70, 42, 22, 0.5), transparent 55%),
-        linear-gradient(160deg, #17100c 0%, #0a0705 100%);
+        radial-gradient(ellipse at 50% 30%, rgba(70, 42, 22, 0.55), transparent 55%),
+        linear-gradient(160deg, #17100c 0%, #090705 100%);
     }
 
     .scene {
@@ -33,7 +33,6 @@
       gap: 12px;
       flex-wrap: wrap;
       margin-bottom: 8px;
-      color: #f0d9a4;
     }
 
     .topbar h1 {
@@ -44,7 +43,7 @@
     }
 
     .hint {
-      margin: 0 0 12px;
+      margin: 0 0 14px;
       color: #cfb583;
       font-size: 0.95rem;
     }
@@ -71,141 +70,109 @@
       position: relative;
       width: min(980px, 100%);
       margin: 0 auto;
-      aspect-ratio: 16 / 11;
-      min-height: 440px;
+      min-height: min(72vh, 640px);
       perspective: 1800px;
     }
 
     .book {
-      position: absolute;
-      inset: 0;
+      position: relative;
+      width: 100%;
+      min-height: min(72vh, 640px);
       transform-style: preserve-3d;
     }
 
-    /* Closed faction cover */
-    .cover {
+    /* Closed cover: portrait book from your image */
+    .cover-wrap {
       position: absolute;
-      inset: 4% 22% 6% 22%;
+      inset: 0;
+      display: grid;
+      place-items: center;
       z-index: 30;
+      transition: opacity 0.35s ease, transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
       transform-origin: left center;
-      transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
-      filter: drop-shadow(0 22px 35px rgba(0, 0, 0, 0.55));
     }
 
-    .cover img {
-      width: 100%;
-      height: 100%;
+    .cover-wrap img {
+      width: min(340px, 58vw);
+      height: auto;
+      max-height: min(68vh, 560px);
       object-fit: contain;
-      display: block;
-      pointer-events: none;
+      filter: drop-shadow(0 22px 36px rgba(0, 0, 0, 0.6));
       user-select: none;
+      pointer-events: none;
     }
 
-    /* Open book artwork */
+    /* Open book: full artwork */
     .open-book {
       position: absolute;
       inset: 0;
+      display: grid;
+      place-items: center;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.35s ease 0.2s;
+      transition: opacity 0.35s ease 0.15s;
     }
 
-    .open-book > img.book-art {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
+    .open-book .book-art {
+      width: min(960px, 96%);
+      height: auto;
+      max-height: min(70vh, 620px);
       object-fit: contain;
       filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.55));
-      pointer-events: none;
       user-select: none;
+      pointer-events: none;
     }
 
-    /* Text overlays on the open pages */
-    .page-overlay {
-      position: absolute;
-      top: 18%;
-      bottom: 22%;
-      width: 30%;
-      color: #2a1c12;
-      overflow: hidden;
-      z-index: 4;
-      text-shadow: 0 1px 0 rgba(255, 240, 200, 0.25);
-    }
-
-    .page-overlay.left { left: 16%; }
-    .page-overlay.right { right: 16%; }
-
-    .page-overlay h2 {
-      margin: 0 0 8px;
-      font-family: Cinzel, serif;
-      font-size: clamp(0.85rem, 2vw, 1.25rem);
-      letter-spacing: 0.03em;
-    }
-
-    .page-overlay p {
-      margin: 0;
-      line-height: 1.35;
-      font-size: clamp(0.78rem, 1.5vw, 0.98rem);
-    }
-
-    .page-overlay .meta {
-      margin-top: 10px;
-      font-style: italic;
-      opacity: 0.75;
-      font-size: 0.85rem;
-    }
-
-    /* 3D flip page layer */
+    /* Flip layer aligned to right page of artwork */
     .flipper {
       position: absolute;
-      top: 14%;
+      top: 18%;
       right: 14%;
-      width: 36%;
-      height: 68%;
+      width: 34%;
+      height: 62%;
       transform-origin: left center;
       transform-style: preserve-3d;
-      z-index: 10;
+      z-index: 12;
       pointer-events: none;
       opacity: 0;
     }
 
     .flipper.is-flipping {
       opacity: 1;
-      animation: flipPage 0.75s ease-in-out forwards;
+      animation: flipPage 0.78s ease-in-out forwards;
     }
 
     .flip-face {
       position: absolute;
       inset: 0;
       backface-visibility: hidden;
-      border-radius: 4px;
+      border-radius: 2px 10px 10px 2px;
       overflow: hidden;
-      background: #e6cfa0 center/cover no-repeat;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      background: center / cover no-repeat url("assets/page-flip.webp");
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
     }
 
-    .flip-face.front {
-      background-image:
-        linear-gradient(90deg, rgba(0,0,0,0.12), transparent 18%),
-        url("assets/page-flip.webp");
-      background-size: cover;
+    .flip-face.front::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,0.18), transparent 22%, rgba(255,255,255,0.12));
     }
 
     .flip-face.back {
       transform: rotateY(180deg);
-      background-image:
-        linear-gradient(270deg, rgba(0,0,0,0.12), transparent 18%),
-        url("assets/page-flip.webp");
-      background-size: cover;
+      filter: brightness(0.92);
     }
 
-    .flip-face .label {
+    .flip-face .caption {
       position: absolute;
-      inset: 12%;
+      left: 10%;
+      right: 10%;
+      top: 12%;
       color: #2a1c12;
       font-family: Cinzel, serif;
-      font-size: clamp(0.8rem, 1.6vw, 1.1rem);
+      font-size: clamp(0.75rem, 1.5vw, 1rem);
+      text-shadow: 0 1px 0 rgba(255, 240, 210, 0.35);
     }
 
     @keyframes flipPage {
@@ -213,11 +180,10 @@
       100% { transform: rotateY(-180deg); }
     }
 
-    /* Ribbon bookmarks over the book bottom */
     .bookmarks {
       position: absolute;
       left: 50%;
-      bottom: 8%;
+      bottom: 4%;
       transform: translateX(-50%);
       display: flex;
       gap: 8px;
@@ -228,13 +194,13 @@
     }
 
     .bookmark {
-      width: 32px;
-      height: 52px;
+      width: 34px;
+      height: 54px;
       border: 0;
       padding: 0;
       cursor: pointer;
       background: transparent;
-      filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.4));
+      filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.45));
     }
 
     .bookmark span {
@@ -261,8 +227,16 @@
       outline: 2px solid rgba(255, 220, 126, 0.55);
     }
 
-    .book.is-open .cover {
-      transform: rotateY(-112deg) translateX(-6%);
+    .status {
+      margin-top: 10px;
+      text-align: center;
+      color: #d7bf8e;
+      min-height: 1.2em;
+      font-size: 0.95rem;
+    }
+
+    .book.is-open .cover-wrap {
+      transform: rotateY(-108deg) translateX(-8%);
       opacity: 0;
       pointer-events: none;
     }
@@ -277,47 +251,17 @@
       pointer-events: auto;
     }
 
-    .book.is-flipping .page-overlay.right {
-      opacity: 0.25;
-    }
-
     @media (max-width: 760px) {
-      .stage {
-        aspect-ratio: auto;
-        min-height: 620px;
-      }
-
-      .cover {
-        inset: 2% 10% 34% 10%;
-      }
-
-      .page-overlay {
-        top: 16%;
-        bottom: auto;
-        height: 28%;
-        width: 66%;
-      }
-
-      .page-overlay.left {
-        left: 17%;
-      }
-
-      .page-overlay.right {
-        top: 48%;
-        right: auto;
-        left: 17%;
-      }
-
+      .stage, .book { min-height: 560px; }
+      .cover-wrap img { width: min(280px, 70vw); }
+      .open-book .book-art { max-height: 420px; }
       .flipper {
-        top: 42%;
-        right: 14%;
-        width: 70%;
-        height: 34%;
+        top: 22%;
+        right: 8%;
+        width: 42%;
+        height: 48%;
       }
-
-      .bookmarks {
-        bottom: 4%;
-      }
+      .bookmarks { bottom: 1%; }
     }
   </style>
 </head>
@@ -336,35 +280,23 @@
       </div>
     </header>
 
-    <p class="hint">Cover = deine Buchbilder. Oeffnen, dann unten Lesezeichen tippen fuer Blatter-Animation.</p>
+    <p class="hint">Echte Cover + offenes Buch aus deinen GitHub-Bildern. Lesezeichen = Blatter-Animation.</p>
 
     <section class="stage">
       <div id="book" class="book">
-        <div class="cover">
-          <img id="coverImg" src="assets/cover-alliance.webp" alt="Buch Cover">
+        <div class="cover-wrap">
+          <img id="coverImg" src="assets/cover-alliance.webp" alt="Allianz Chronik Cover">
         </div>
 
         <div class="open-book">
-          <img class="book-art" src="assets/book-open.webp" alt="Offenes Buch">
-
-          <div class="page-overlay left">
-            <h2 id="leftTitle">Kapitel</h2>
-            <p id="leftBody">Platzhalter links.</p>
-            <p class="meta" id="leftMeta">Seite A</p>
-          </div>
-
-          <div class="page-overlay right">
-            <h2 id="rightTitle">Quest</h2>
-            <p id="rightBody">Platzhalter rechts.</p>
-            <p class="meta" id="rightMeta">Seite B</p>
-          </div>
+          <img class="book-art" src="assets/book-open.webp" alt="Offenes Codex Buch">
 
           <div id="flipper" class="flipper" aria-hidden="true">
             <div class="flip-face front">
-              <div class="label" id="flipFrontLabel">...</div>
+              <div class="caption" id="flipFrontLabel"></div>
             </div>
             <div class="flip-face back">
-              <div class="label" id="flipBackLabel">...</div>
+              <div class="caption" id="flipBackLabel"></div>
             </div>
           </div>
         </div>
@@ -372,46 +304,16 @@
         <nav id="bookmarks" class="bookmarks" aria-label="Lesezeichen"></nav>
       </div>
     </section>
+
+    <p id="status" class="status">Aktuelle Seite: Heldbrecher-Chronik</p>
   </main>
 
   <script>
-    const pages = [
-      {
-        leftTitle: "Heldbrecher-Chronik",
-        leftBody: "Platzhalter-Lore auf der linken Seite. Dein echter Inhalt kommt spaeter aus dem Addon.",
-        leftMeta: "Seite A",
-        rightTitle: "Die verlorene Festung",
-        rightBody: "Quest-Platzhalter rechts: Ziel, Fortschritt und Belohnungen.",
-        rightMeta: "Seite B",
-        marker: "I",
-      },
-      {
-        leftTitle: "Schatten-Chronik",
-        leftBody: "Zweiter Abschnitt. Spaeter NPC-/Kartennotizen.",
-        leftMeta: "Seite A",
-        rightTitle: "Ruinen von Andorhal",
-        rightBody: "Zweite Questseite als Platzhalter.",
-        rightMeta: "Seite B",
-        marker: "II",
-      },
-      {
-        leftTitle: "Bestiarium",
-        leftBody: "Dritte Doppelseite fuer Skizzen und Beschreibungen.",
-        leftMeta: "Seite A",
-        rightTitle: "Belohnungen",
-        rightBody: "Loot- und Belohnungsplatzhalter.",
-        rightMeta: "Seite B",
-        marker: "III",
-      },
-      {
-        leftTitle: "Dungeon Log",
-        leftBody: "Vierte Doppelseite fuer Notizen und Taktiken.",
-        leftMeta: "Seite A",
-        rightTitle: "Feldnotizen",
-        rightBody: "Freier Platzhalter fuer Marker und Orte.",
-        rightMeta: "Seite B",
-        marker: "IV",
-      },
+    const chapters = [
+      { marker: "I", label: "Heldbrecher-Chronik" },
+      { marker: "II", label: "Schatten-Chronik" },
+      { marker: "III", label: "Bestiarium" },
+      { marker: "IV", label: "Dungeon Log" },
     ];
 
     const book = document.getElementById("book");
@@ -421,40 +323,31 @@
     const closeBookBtn = document.getElementById("closeBookBtn");
     const bookmarks = document.getElementById("bookmarks");
     const flipper = document.getElementById("flipper");
+    const status = document.getElementById("status");
 
     let currentPage = 0;
     let isFlipping = false;
 
     function setFaction(faction) {
-      coverImg.src = faction === "horde"
-        ? "assets/cover-horde.webp"
-        : "assets/cover-alliance.webp";
-      coverImg.alt = faction === "horde" ? "Horde Kodex" : "Allianz Chronik";
+      const isHorde = faction === "horde";
+      coverImg.src = isHorde ? "assets/cover-horde.webp" : "assets/cover-alliance.webp";
+      coverImg.alt = isHorde ? "Horde Kodex Cover" : "Allianz Chronik Cover";
     }
 
-    function renderPage(index) {
-      const page = pages[index];
-      document.getElementById("leftTitle").textContent = page.leftTitle;
-      document.getElementById("leftBody").textContent = page.leftBody;
-      document.getElementById("leftMeta").textContent = page.leftMeta;
-      document.getElementById("rightTitle").textContent = page.rightTitle;
-      document.getElementById("rightBody").textContent = page.rightBody;
-      document.getElementById("rightMeta").textContent = page.rightMeta;
-
+    function renderMarkers() {
       bookmarks.querySelectorAll(".bookmark").forEach((btn, i) => {
-        btn.classList.toggle("active", i === index);
+        btn.classList.toggle("active", i === currentPage);
       });
+      status.textContent = `Aktuelle Seite: ${chapters[currentPage].label}`;
     }
 
     function flipTo(targetIndex) {
       if (!book.classList.contains("is-open")) return;
-      if (isFlipping || targetIndex === currentPage || !pages[targetIndex]) return;
+      if (isFlipping || targetIndex === currentPage || !chapters[targetIndex]) return;
 
       isFlipping = true;
-      book.classList.add("is-flipping");
-
-      document.getElementById("flipFrontLabel").textContent = pages[currentPage].rightTitle;
-      document.getElementById("flipBackLabel").textContent = pages[targetIndex].rightTitle;
+      document.getElementById("flipFrontLabel").textContent = chapters[currentPage].label;
+      document.getElementById("flipBackLabel").textContent = chapters[targetIndex].label;
 
       flipper.classList.remove("is-flipping");
       void flipper.offsetWidth;
@@ -462,9 +355,8 @@
 
       const onDone = () => {
         currentPage = targetIndex;
-        renderPage(currentPage);
+        renderMarkers();
         flipper.classList.remove("is-flipping");
-        book.classList.remove("is-flipping");
         isFlipping = false;
         flipper.removeEventListener("animationend", onDone);
       };
@@ -473,11 +365,12 @@
     }
 
     function createBookmarks() {
-      pages.forEach((page, index) => {
+      chapters.forEach((chapter, index) => {
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "bookmark";
-        btn.innerHTML = `<span>${page.marker}</span>`;
+        btn.title = chapter.label;
+        btn.innerHTML = `<span>${chapter.marker}</span>`;
         btn.addEventListener("click", () => flipTo(index));
         bookmarks.appendChild(btn);
       });
@@ -489,7 +382,7 @@
 
     createBookmarks();
     setFaction("alliance");
-    renderPage(0);
+    renderMarkers();
   </script>
 </body>
 </html>
