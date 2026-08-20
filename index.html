@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codex Book Animation Demo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="scene">
+    <header class="topbar">
+      <h1>Codex of Tales - Demo</h1>
+      <div class="controls">
+        <label for="factionSelect">Fraktion:</label>
+        <select id="factionSelect">
+          <option value="alliance">Allianz</option>
+          <option value="horde">Horde</option>
+        </select>
+        <button id="openBookBtn" type="button">Buch öffnen</button>
+      </div>
+    </header>
+
+    <section class="book-shell">
+      <div id="book" class="book is-closed" aria-live="polite">
+        <div id="bookCover" class="book-cover">
+          <div class="cover-title">Codex</div>
+          <div id="coverFaction" class="cover-faction">Allianz Chronik</div>
+          <div class="cover-subtitle">Chronicle of Azeroth</div>
+        </div>
+
+        <div id="pageSpread" class="page-spread">
+          <article class="page left-page">
+            <h2 id="leftTitle">Kapitel</h2>
+            <p id="leftBody">Platzhalter links.</p>
+          </article>
+
+          <article class="page right-page">
+            <h2 id="rightTitle">Quest</h2>
+            <p id="rightBody">Platzhalter rechts.</p>
+          </article>
+
+          <div id="flipOverlay" class="flip-overlay" aria-hidden="true"></div>
+        </div>
+
+        <nav id="bookmarks" class="bookmarks" aria-label="Lesezeichen"></nav>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
