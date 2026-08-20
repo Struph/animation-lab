@@ -1,10 +1,17 @@
 # animation-lab
 
 Browser-Demo fuer ein WoW-inspiriertes Codex-Buch:
-- Fraktions-Cover (Allianz/Horde) mit Aufklapp-Animation
-- offenes Lederbuch mit Pergament-Seiten
+- echte Buch-Cover-Bilder (Allianz/Horde)
+- offenes Buch als Bild-Asset
 - Band-Lesezeichen unten
-- echte 3D-Blaetter-Animation beim Seitenwechsel
+- 3D-Blaetter-Animation beim Seitenwechsel
+
+## Assets
+
+- `assets/cover-alliance.webp`
+- `assets/cover-horde.webp`
+- `assets/book-open.webp`
+- `assets/page-flip.webp`
 
 ## Wichtig fuer Handy / Online-Preview
 
