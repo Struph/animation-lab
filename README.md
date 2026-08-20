@@ -2,16 +2,24 @@
 
 Browser-Demo fuer ein WoW-inspiriertes Codex-Buch (Fraktions-Cover, Oeffnen, Lesezeichen, Blaettern).
 
-## Am einfachsten oeffnen (1 Datei)
+## Wichtig fuer Handy / Online-Preview
 
-1. Oeffne diese Datei auf GitHub:
-   - [codex-demo.html](https://github.com/Struph/animation-lab/blob/cursor/book-browser-demo-db85/codex-demo.html)
-2. Klicke oben rechts auf die drei Punkte `...` -> **Download**
-3. Die heruntergeladene Datei per Doppelklick oeffnen (Chrome/Edge/Firefox)
+Das Repo ist aktuell **privat**. Online-Preview-Links sind dann weiss/leer, weil die Datei oeffentlich nicht geladen werden kann.
 
-Alternativ direkt im Browser anschauen (Online-Preview):
+### Auf dem Handy anschauen
 
-https://htmlpreview.github.io/?https://github.com/Struph/animation-lab/blob/cursor/book-browser-demo-db85/codex-demo.html
+1. Repo kurz auf **Public** stellen:
+   - https://github.com/Struph/animation-lab/settings
+   - ganz unten: **Change repository visibility** -> **Public**
+2. Danach einen dieser Links oeffnen:
+   - https://htmlpreview.github.io/?https://raw.githubusercontent.com/Struph/animation-lab/cursor/book-browser-demo-db85/codex-demo.html
+   - https://raw.githack.com/Struph/animation-lab/cursor/book-browser-demo-db85/codex-demo.html
+3. Danach kannst du das Repo wieder auf **Private** stellen.
+
+### Am PC (ohne Public)
+
+1. Datei herunterladen: [codex-demo.html](https://github.com/Struph/animation-lab/blob/cursor/book-browser-demo-db85/codex-demo.html)
+2. Doppelklick -> oeffnet im Browser
 
 ## Bedienung in der Demo
 
